@@ -2,7 +2,7 @@ import tensorflow as tf
 from model import wide_resnet
 from dataset import DataGenerator
 import argparse
-from scipy.spceial import softmax
+from scipy.special import softmax
 import numpy as np
 
 
@@ -30,11 +30,11 @@ def main(args):
 
     test_data=DataGenerator(x_test,y_test,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,True)
 
-    model = wide_resnet(input_shape,args.d,args.w_mult,n_classes, args.l_2)
+    model = wide_resnet(input_shape,args.d,args.w_mult,n_classes, args.l2_reg)
     
     model.load_weights(args.model)
 
-    y_pred = model.predict(test_data)
+    y_pred = model.predict(test_data, batch_size = args.batch_size)
 
     print(accuracy(y_pred,y_test))
 
@@ -57,4 +57,4 @@ if __name__=="__main__":
     args=parser.parse_args()
 
 
-    main()
+    main(args)
