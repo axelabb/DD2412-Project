@@ -42,17 +42,20 @@ def main():
 
     traing_data=DataGenerator(x_train,y_train,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,True)
 
-    model = wide_resnet(input_shape,args.d,args.w_mult,n_classes, args.l_2)
+    strategy = tf.distribute.MirroredStrategy()
 
-    lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
-        0.1,
-        decay_steps=steps_per_epoch,
-        decay_rate=0.1)
+    with strategy.scope():
+        model = wide_resnet(input_shape,args.d,args.w_mult,n_classes, args.l_2)
 
-    optimizer = tf.keras.optimizers.SGD(lr_schedule)
+        lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+            0.1,
+            decay_steps=steps_per_epoch,
+            decay_rate=0.1)
 
-    model.compile(optimizer,loss = NLL())
-    model.fit(traing_data,epochs=args.epochs)
+        optimizer = tf.keras.optimizers.SGD(lr_schedule)
+
+        model.compile(optimizer,loss = NLL())
+        model.fit(traing_data,epochs=args.epochs)
 
     
 
