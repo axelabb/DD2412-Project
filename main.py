@@ -1,3 +1,4 @@
+import re
 import tensorflow as tf
 import argparse
 import os
@@ -14,22 +15,8 @@ def load_cifar10():
     return x_train, y_train, x_test, y_test
 
 
-def main():
+def main(args):
 
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('ensemble_size',type=int,default=3)
-    parser.add_argument('epochs',type=int,default=250)
-    parser.add_argument('batch_size',type=int,default=512)
-    parser.add_argument('gpus',type=int,default=4)
-    parser.add_argument('batch_rep',type=int,default=4)
-    parser.add_argument('inp_rep_prob',type=float,default=0.5)
-    parser.add_argument('l2_reg',type=int,default=3e-4)
-    parser.add_argument('d',type=int,default=28)
-    parser.add_argument('w_mult',type=int,default=10)
-    parser.add_argument('dataset',type=str,default="cifar-10")
-
-    args=parser.parse_args()
 
     if args.dataset == "cifar-10":
         x_train,y_train, x_test,y_test = load_cifar10()
@@ -53,7 +40,7 @@ def main():
     strategy = tf.distribute.MirroredStrategy()
 
     with strategy.scope():
-        model = wide_resnet(input_shape,args.d,args.w_mult,n_classes, args.l_2)
+        model = wide_resnet(input_shape,args.d,args.w_mult,n_classes, args.l2_reg)
 
         lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
             0.1,
@@ -70,4 +57,21 @@ def main():
     
 
 if __name__=="__main__":
-    main()
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--ensemble_size',type=int, default=3, required=False)
+    parser.add_argument('--epochs',type=int,default=250, required= False)
+    parser.add_argument('--batch_size',type=int,default=512, required= False)
+    parser.add_argument('--gpus',type=int,default=4, required=False)
+    parser.add_argument('--batch_rep',type=int,default=4, required=False)
+    parser.add_argument('--inp_rep_prob',type=float,default=0.5, required= False)
+    parser.add_argument('--l2_reg',type=int,default=3e-4, required=False)
+    parser.add_argument('--d',type=int,default=28, required=False)
+    parser.add_argument('--w_mult',type=int,default=10, required=False)
+    parser.add_argument('--dataset',type=str,default="cifar-10", required=False)
+
+    args=parser.parse_args()
+
+
+    main(args)
