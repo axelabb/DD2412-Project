@@ -13,8 +13,8 @@ def load_cifar10():
 
     return x_train, y_train, x_test, y_test
 
-def accuracy(pred,labels,n_classes):
-    probs = softmax(np.reshape(pred,[-1,n_classes]))
+def accuracy(pred,labels):
+    probs = softmax(pred)
     probs = np.mean(probs,axis=1)
     accuracy = tf.keras.metrics.sparse_categorical_accuracy(labels,probs) #Funkar detta?
 
@@ -36,7 +36,7 @@ def main(args):
 
     y_pred = model.predict(test_data, batch_size = args.batch_size)
 
-    print(accuracy(y_pred,y_test, n_classes=n_classes))
+    print(accuracy(y_pred,y_test))
 
 if __name__=="__main__":
 
