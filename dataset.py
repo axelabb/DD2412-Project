@@ -7,7 +7,7 @@ class DataGenerator(tf.keras.utils.Sequence):
     def __init__(self,X,y,batch_size,batch_rep,inp_rep_prob,ensemble_size,training,shuffle=True):
         self.X = X
         self.y = y
-        if self.training:
+        if training:
             self.batch_size = batch_size //batch_rep
         else:
             self.batch_size = batch_size
