@@ -63,7 +63,7 @@ def main():
         optimizer = tf.keras.optimizers.SGD(lr_schedule)
 
         model.compile(optimizer,loss = NLL())
-        model.fit(traing_data,epochs=args.epochs,,callbacks=callbacks)
+        model.fit(traing_data,epochs=args.epochs,callbacks=callbacks)
 
     
 
