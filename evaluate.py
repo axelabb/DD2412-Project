@@ -37,7 +37,7 @@ def main(args):
     
     model.load_weights(args.model)
 
-    y_pred = model.predict(test_data, batch_size = args.batch_size)
+    y_pred = model.predict(test_data)
     print(y_pred.shape)
     print(accuracy(y_pred,y_test))
 
