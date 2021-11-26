@@ -2,6 +2,9 @@ import tensorflow as tf
 from model import wide_resnet
 from dataset import DataGenerator
 import argparse
+from scipy.spceial import softmax
+import numpy as np
+
 
 def load_cifar10():
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
@@ -10,9 +13,12 @@ def load_cifar10():
 
     return x_train, y_train, x_test, y_test
 
-def accuracy(pred,label):
+def accuracy(pred,labels,n_classes):
+    probs = softmax(np.reshape(pred,[-1,n_classes]))
+    probs = np.mean(probs,axis=-1)
+    accuracy = tf.keras.metrics.sparse_categorical_accuracy(labels,probs) #Funkar detta?
 
-    return 
+    return accuracy
 
 def main(args):
     
