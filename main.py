@@ -1,6 +1,6 @@
 import tensorflow as tf
 import argparse
-
+import os
 from model import wide_resnet
 from dataset import DataGenerator
 
@@ -42,6 +42,14 @@ def main():
 
     traing_data=DataGenerator(x_train,y_train,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,True)
 
+    # Define the checkpoint directory to store the checkpoints.
+    checkpoint_dir = './training_checkpoints'
+    # Define the name of the checkpoint files.
+    checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt_{epoch}")
+    callbacks = [tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_prefix,
+                                       save_weights_only=True)]
+
+
     strategy = tf.distribute.MirroredStrategy()
 
     with strategy.scope():
@@ -55,7 +63,7 @@ def main():
         optimizer = tf.keras.optimizers.SGD(lr_schedule)
 
         model.compile(optimizer,loss = NLL())
-        model.fit(traing_data,epochs=args.epochs)
+        model.fit(traing_data,epochs=args.epochs,,callbacks=callbacks)
 
     
 
