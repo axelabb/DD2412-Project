@@ -17,7 +17,7 @@ def accuracy(pred,labels):
     probs = softmax(pred)
     probs = np.mean(probs,axis=1)
     accuracy = tf.keras.metrics.sparse_categorical_accuracy(labels,probs) #Funkar detta?
-
+    accuracy=np.mean(accuracy)
     return accuracy
 
 def main(args):
