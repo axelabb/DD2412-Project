@@ -51,7 +51,7 @@ def main(args):
 
         model.compile(optimizer,loss = NLL())
         model.fit(traing_data,epochs=args.epochs,callbacks=callbacks)
-
+        model.save(f"model_{args.epochs}_{args.batc_size}_{args.batch_rep}.h5")
     
 
     
