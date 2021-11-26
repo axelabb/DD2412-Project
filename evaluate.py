@@ -25,6 +25,9 @@ def main(args):
     if args.dataset == "cifar-10":
         x_train,y_train, x_test,y_test = load_cifar10()
         n_classes = 10
+    
+    x_test = x_test[:10]
+    y_test = y_test[:10]
 
     input_shape = tuple([3]+ list(x_train[0].shape))
 
