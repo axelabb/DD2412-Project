@@ -36,7 +36,7 @@ def main(args):
 
     y_pred = model.predict(test_data)
 
-    accuracy(y_pred,y_test)
+    print(accuracy(y_pred,y_test))
 
 if __name__=="__main__":
 
