@@ -1,5 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Input,Permute, Reshape, Conv2D, BatchNormalization, Activation,Add,AveragePooling2D,Flatten,Dense
+from tensorflow.keras.regularizers import l2
 
 
 def basic_block(input,filters,strides,l_2):
