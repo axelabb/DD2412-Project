@@ -1,4 +1,5 @@
 import tensorflow as tf
+import argparse
 
 from model import wide_resnet
 from dataset import DataGenerator
@@ -15,24 +16,33 @@ def load_cifar10():
 
 def main():
 
-    x_train,y_train, x_test,y_test = load_cifar10()
+    parser = argparse.ArgumentParser()
 
-    ensemble_size = 3
-    d = 28
-    w_mult = 10
-    n_classes = 10
-    epochs = 250
-    batch_size = 128
-    batch_rep = 4
-    inp_rep_prob = 0.5
+    parser.add_argument('ensemble_size',type=int,default=3)
+    parser.add_argument('epochs',type=int,default=250)
+    parser.add_argument('batch_size',type=int,default=512)
+    parser.add_argument('gpus',type=int,default=4)
+    parser.add_argument('batch_rep',type=int,default=4)
+    parser.add_argument('inp_rep_prob',type=float,default=0.5)
+    parser.add_argument('l2_reg',type=int,default=3e-4)
+    parser.add_argument('d',type=int,default=28)
+    parser.add_argument('w_mult',type=int,default=10)
+    parser.add_argument('dataset',type=str,default="cifar-10")
+
+    args=parser.parse_args()
+
+    if args.dataset == "cifar-10":
+        x_train,y_train, x_test,y_test = load_cifar10()
+        n_classes = 10
+
+
     input_shape = tuple([3]+ list(x_train[0].shape))
-    val_split = 0.1
-    l_2 = 3e-4
-    steps_per_epoch = x_train.shape[0] * 1 - val_split
+    
+    steps_per_epoch = x_train.shape[0] //args.batch_size
 
-    traing_data=DataGenerator(x_train,y_train,batch_size,batch_rep,inp_rep_prob,ensemble_size,True)
+    traing_data=DataGenerator(x_train,y_train,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,True)
 
-    model = wide_resnet(input_shape,d,w_mult,n_classes, l_2)
+    model = wide_resnet(input_shape,args.d,args.w_mult,n_classes, args.l_2)
 
     lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
         0.1,
@@ -42,7 +52,7 @@ def main():
     optimizer = tf.keras.optimizers.SGD(lr_schedule)
 
     model.compile(optimizer,loss = NLL())
-    model.fit(traing_data,epochs=epochs)
+    model.fit(traing_data,epochs=args.epochs)
 
     
 
