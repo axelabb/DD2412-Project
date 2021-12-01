@@ -18,9 +18,9 @@ def load_cifar10():
 def accuracy(pred,labels):
     probs = softmax(pred)
     probs = np.mean(probs,axis=1)
-    print(probs.shape)
-    print(labels.shape)
-    accuracy = tf.keras.metrics.sparse_categorical_accuracy(labels,probs) #Funkar detta?
+    #print(probs.shape)
+    #print(labels.shape)
+    accuracy = tf.keras.metrics.categorical_accuracy(labels,probs) #Funkar detta?
     accuracy=np.mean(accuracy)
     return accuracy
 
@@ -33,14 +33,14 @@ def main(args):
 
     input_shape = tuple([3]+ list(x_train[0].shape))
 
-    test_data=DataGenerator(x_test,y_test,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,n_classes,False)
+    test_data=DataGenerator(x_test,y_test,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size, False, n_classes)
 
     model = wide_resnet(input_shape,args.d,args.w_mult,n_classes, args.l2_reg)
     
     model.load_weights(args.model)
 
     y_pred = model.predict(test_data)
-    print(y_pred.shape)
+    #print(y_pred.shape)
     print(accuracy(y_pred,y_test))
 
 if __name__=="__main__":

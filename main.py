@@ -29,7 +29,7 @@ def main(args):
     
     steps_per_epoch = x_train.shape[0] //args.batch_size
 
-    traing_data=DataGenerator(x_train,y_train,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,n_classes,True)
+    traing_data=DataGenerator(x_train,y_train,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,False, n_classes)
     
     if args.sigma:
         traing_data.noise_againse_noise(args.sigma)
