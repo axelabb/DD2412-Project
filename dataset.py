@@ -53,7 +53,7 @@ class DataGenerator(tf.keras.utils.Sequence):
             to = self.n
         imgs = self.X[index * self.batch_size : to]
         labels = self.y[index * self.batch_size: to]
-        
+
         if self.training:
             imgs, labels = self.__get_train_data(imgs,labels)
         else:
@@ -64,14 +64,18 @@ class DataGenerator(tf.keras.utils.Sequence):
         return np.ceil(self.n / self.batch_size)
 
     def add_label_noise(self,noise,ratio):
-        for i in range(len(self.y)):
+        y = np.argmax(self.y,axis=1)
+
+        for i in range(len(y)):
             if noise=='sym':
                 p1 = ratio/(self.n_class-1)*np.ones(self.n_class)
-                p1[self.y[i]] = 1-ratio
-                self.y[i] = np.random.choice(self.n_class,p=p1)
+                p1[y[i]] = 1-ratio
+                y[i] = np.random.choice(self.n_class,p=p1)
 
             elif noise=='asym':
-                self.y[i] = np.random.choice([self.y[i],(self.y[i]+1)%self.n_class],p=[1-ratio,ratio])   
+                y[i] = np.random.choice([y[i],(y[i]+1)%self.n_class],p=[1-ratio,ratio])   
+
+        self.y = np.eye(self.n_classes)[y]
 
     def noise_againse_noise(self,sigma):
         self.noise = True
