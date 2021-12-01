@@ -48,8 +48,12 @@ class DataGenerator(tf.keras.utils.Sequence):
         return imgs, labels
 
     def __getitem__(self, index):
-        imgs = self.X[index * self.batch_size : (index + 1) * self.batch_size]
-        labels = self.y[index * self.batch_size: (index + 1) * self.batch_size]
+        to = (index + 1) * self.batch_size
+        if to> self.n:
+            to = self.n
+        imgs = self.X[index * self.batch_size : to]
+        labels = self.y[index * self.batch_size: to]
+        
         if self.training:
             imgs, labels = self.__get_train_data(imgs,labels)
         else:
@@ -57,7 +61,7 @@ class DataGenerator(tf.keras.utils.Sequence):
         return  imgs, labels
         
     def __len__(self):
-        return self.n // self.batch_size
+        return np.ceil(self.n / self.batch_size)
 
     def add_label_noise(self,noise,ratio):
         for i in range(len(self.y)):
