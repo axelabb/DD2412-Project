@@ -33,7 +33,7 @@ def main(args):
 
     input_shape = tuple([3]+ list(x_train[0].shape))
 
-    test_data=DataGenerator(x_test,y_test,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,False)
+    test_data=DataGenerator(x_test,y_test,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,n_classes,False)
 
     model = wide_resnet(input_shape,args.d,args.w_mult,n_classes, args.l2_reg)
     
