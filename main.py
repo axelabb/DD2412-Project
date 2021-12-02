@@ -29,7 +29,10 @@ def main(args):
     
     steps_per_epoch = x_train.shape[0] //args.batch_size
 
-    traing_data=DataGenerator(x_train,y_train,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,n_classes,True)
+    traing_data=DataGenerator(x_train,y_train,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,False, n_classes)
+    
+    if args.sigma:
+        traing_data.noise_againse_noise(args.sigma)
 
     # Define the checkpoint directory to store the checkpoints.
     checkpoint_dir = './training_checkpoints'
@@ -72,6 +75,8 @@ if __name__=="__main__":
     parser.add_argument('--d',type=int,default=28, required=False)
     parser.add_argument('--w_mult',type=int,default=10, required=False)
     parser.add_argument('--dataset',type=str,default="cifar-10", required=False)
+
+    parser.add_argument('--sigma', type = float, default=None, required=None)
 
     args=parser.parse_args()
 

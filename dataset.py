@@ -61,7 +61,7 @@ class DataGenerator(tf.keras.utils.Sequence):
         return  imgs, labels
         
     def __len__(self):
-        return np.ceil(self.n / self.batch_size)
+        return int(np.ceil(self.n / self.batch_size))
 
     def add_label_noise(self,noise,ratio):
         y = np.argmax(self.y,axis=1)
