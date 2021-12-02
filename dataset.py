@@ -39,7 +39,6 @@ class DataGenerator(tf.keras.utils.Sequence):
         labels = np.stack([np.take(labels, indxs, axis=0) for indxs in shuffle_idxs], axis=1)
         if self.noise:
             labels += self.sigma*np.random.randn(*labels.shape)
-        print(labels.shape)
         return imgs, labels
 
     def __get_test_data(self,imgs,labels):
