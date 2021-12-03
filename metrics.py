@@ -14,7 +14,7 @@ class NLL(Loss):
 
 class NLL_metric(tf.keras.metrics.Metric):
 
-    def __init__(self, n_classes,name="NLL", dtype=None, **kwargs):
+    def __init__(self,name="NLL", dtype=None, **kwargs):
         super().__init__(name=name, dtype=dtype, **kwargs)
         self.nll = self.add_weight(name='nll', initializer='zeros')
 
