@@ -16,15 +16,16 @@ class NLL_metric(tf.keras.metrics.Metric):
 
     def __init__(self,name="NLL", dtype=None, **kwargs):
         super().__init__(name=name, dtype=dtype, **kwargs)
-        self.nll = self.add_weight(name='nll', initializer='zeros')
+        self.nll = 0
+        self.count = 0
 
     def update_state(self, y_true,y_pred,**kwargs):
         loss = tf.keras.losses.categorical_crossentropy(y_true, y_pred, from_logits=True)
-        nll = tf.reduce_mean(tf.reduce_sum(loss, axis=1))
-        self.nll.assign_add(nll)
+        self.nll += tf.reduce_mean(tf.reduce_sum(loss, axis=1))
+        self.count +=1
 
     def result(self):
-        return self.nll
+        return self.nll/self.count
 
 class Accuracy(tf.keras.metrics.Metric):
 
