@@ -57,7 +57,7 @@ def main(args):
         lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
             0.1,
             decay_steps=steps_per_epoch,
-            decay_rate=0.1)
+            decay_rate=0.9)
 
         optimizer = tf.keras.optimizers.SGD(lr_schedule)
         model.compile(optimizer,loss = NLL(),metrics=[NLL_metric()])
