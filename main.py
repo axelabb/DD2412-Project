@@ -4,8 +4,8 @@ import argparse
 import os
 from model import wide_resnet
 from dataset import DataGenerator
-import joblib
 from metrics import NLL
+import pickle
 
 def load_cifar10():
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
@@ -58,7 +58,9 @@ def main(args):
         model.compile(optimizer,loss = NLL())
         history = model.fit(traing_data,epochs=args.epochs,callbacks=callbacks)
         model.save(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.h5")
-        joblib.dump(history, f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.history")
+        with open('/trainHistoryDict', 'wb') as file_pi:
+            pickle.dump(history.history, file_pi)
+        #joblib.dump(history, f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.history")
 
 
     
