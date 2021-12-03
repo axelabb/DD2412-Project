@@ -18,7 +18,7 @@ class NLL_metric(tf.keras.metrics.Metric):
         super().__init__(name=name, dtype=dtype, **kwargs)
         self.nll = self.add_weight(name='nll', initializer='zeros')
 
-    def update_state(self, y_true,y_pred):
+    def update_state(self, y_true,y_pred,**kwargs):
         loss = tf.keras.losses.categorical_crossentropy(y_true, y_pred, from_logits=True)
         nll = tf.reduce_mean(tf.reduce_sum(loss, axis=1))
         self.nll.assign_add(nll)
