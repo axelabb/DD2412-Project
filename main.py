@@ -58,7 +58,7 @@ def main(args):
         model.compile(optimizer,loss = NLL())
         history = model.fit(traing_data,epochs=args.epochs,callbacks=callbacks)
         model.save(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.h5")
-        with open('/trainHistoryDict', 'wb') as file_pi:
+        with open('f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.history"', 'wb') as file_pi:
             pickle.dump(history.history, file_pi)
         #joblib.dump(history, f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.history")
 
