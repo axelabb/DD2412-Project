@@ -4,7 +4,7 @@ import argparse
 import os
 from model import wide_resnet
 from dataset import DataGenerator
-
+import joblib
 from metrics import NLL
 
 def load_cifar10():
@@ -55,8 +55,10 @@ def main(args):
         optimizer = tf.keras.optimizers.SGD(lr_schedule)
 
         model.compile(optimizer,loss = NLL())
-        model.fit(traing_data,epochs=args.epochs,callbacks=callbacks)
+        history = model.fit(traing_data,epochs=args.epochs,callbacks=callbacks)
         model.save(f"model_{args.epochs}_{args.batch_size}_{args.batch_rep}.h5")
+        
+        joblib.dump(history, f"model_{args.epochs}_{args.batch_size}_{args.batch_rep}.history")
     
 
     
