@@ -16,12 +16,6 @@ def load_cifar10():
 
     return x_train, y_train, x_test, y_test
 
-class printlearningrate(tf.keras.callbacks.Callback):
-    def on_epoch_end(self, epoch, logs={}):
-        optimizer = self.model.optimizer
-        lr = K.eval(optimizer.lr)
-        Epoch_count = epoch + 1
-        print('\n', "Epoch:", Epoch_count, ', LR: {:.2f}'.format(lr))
 
 def main(args):
 
@@ -46,7 +40,7 @@ def main(args):
     # Define the name of the checkpoint files.
     checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt_{epoch}")
     callbacks = [tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_prefix,
-                                       save_weights_only=True),printlearningrate()]
+                                       save_weights_only=True)]
 
 
     strategy = tf.distribute.MirroredStrategy()
