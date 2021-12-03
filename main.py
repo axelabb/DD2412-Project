@@ -5,6 +5,7 @@ from model import wide_resnet
 from dataset import DataGenerator
 from metrics import NLL,NLL_metric
 import pickle
+from tensorflow.keras import backend as K
 
 def load_cifar10():
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
@@ -15,11 +16,12 @@ def load_cifar10():
 
     return x_train, y_train, x_test, y_test
 
-
-def get_lr_metric(optimizer):
-    def lr(y_true,y_pred):
-        return optimizer.lr
-    return lr
+class printlearningrate(tf.keras.callbacks.Callback):
+    def on_epoch_end(self, epoch, logs={}):
+        optimizer = self.model.optimizer
+        lr = K.eval(optimizer.lr)
+        Epoch_count = epoch + 1
+        print('\n', "Epoch:", Epoch_count, ', LR: {:.2f}'.format(lr))
 
 def main(args):
 
@@ -44,7 +46,7 @@ def main(args):
     # Define the name of the checkpoint files.
     checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt_{epoch}")
     callbacks = [tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_prefix,
-                                       save_weights_only=True)]
+                                       save_weights_only=True),printlearningrate()]
 
 
     strategy = tf.distribute.MirroredStrategy()
@@ -58,8 +60,7 @@ def main(args):
             decay_rate=0.1)
 
         optimizer = tf.keras.optimizers.SGD(lr_schedule)
-        lr_metric = get_lr_metric(optimizer)
-        model.compile(optimizer,loss = NLL(),metrics=[NLL_metric(),lr_metric])
+        model.compile(optimizer,loss = NLL(),metrics=[NLL_metric()])
         history = model.fit(traing_data,epochs=args.epochs,callbacks=callbacks)
         model.save(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.h5")
         with open(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.history", 'wb') as file_pi:
