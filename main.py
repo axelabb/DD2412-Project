@@ -1,10 +1,9 @@
-import re
 import tensorflow as tf
 import argparse
 import os
 from model import wide_resnet
 from dataset import DataGenerator
-from metrics import NLL
+from metrics import NLL,NLL_metric
 import pickle
 
 def load_cifar10():
@@ -55,7 +54,7 @@ def main(args):
 
         optimizer = tf.keras.optimizers.SGD(lr_schedule)
 
-        model.compile(optimizer,loss = NLL())
+        model.compile(optimizer,loss = NLL(),metrics=[NLL_metric])
         history = model.fit(traing_data,epochs=args.epochs,callbacks=callbacks)
         model.save(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.h5")
         with open(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.history", 'wb') as file_pi:
