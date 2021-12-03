@@ -16,7 +16,7 @@ class NLL_metric(tf.keras.metrics.Metric):
 
     def __init__(self,name="NLL", dtype=None, **kwargs):
         super().__init__(name=name, dtype=dtype, **kwargs)
-        self.metric = tf.Variable(0)
+        self.metric = tf.Variable(0.0)
         self.nll = 0
         self.count = 0
 
