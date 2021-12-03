@@ -29,7 +29,8 @@ def main(args):
     
     steps_per_epoch = x_train.shape[0] //args.batch_size
 
-    traing_data=DataGenerator(x_train,y_train,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,False, n_classes)
+    traing_data=DataGenerator(x_train,y_train,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,True
+    , n_classes)
     
     if args.sigma:
         traing_data.noise_againse_noise(args.sigma)
@@ -56,10 +57,9 @@ def main(args):
 
         model.compile(optimizer,loss = NLL())
         history = model.fit(traing_data,epochs=args.epochs,callbacks=callbacks)
-        model.save(f"model_{args.epochs}_{args.batch_size}_{args.batch_rep}.h5")
-        
-        joblib.dump(history, f"model_{args.epochs}_{args.batch_size}_{args.batch_rep}.history")
-    
+        model.save(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.h5")
+        joblib.dump(history, f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.history")
+
 
     
 
