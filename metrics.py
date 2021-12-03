@@ -16,6 +16,7 @@ class NLL_metric(tf.keras.metrics.Metric):
 
     def __init__(self,name="NLL", dtype=None, **kwargs):
         super().__init__(name=name, dtype=dtype, **kwargs)
+        self.metric = tf.Variable(0)
         self.nll = 0
         self.count = 0
 
@@ -25,7 +26,7 @@ class NLL_metric(tf.keras.metrics.Metric):
         self.count +=1
 
     def result(self):
-        return self.nll/self.count
+        return self.metric.assign(self.nll/self.count)
 
 class Accuracy(tf.keras.metrics.Metric):
 
