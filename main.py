@@ -16,6 +16,11 @@ def load_cifar10():
     return x_train, y_train, x_test, y_test
 
 
+def get_lr_metric(optimizer):
+    def lr(y_true,y_pred):
+        return optimizer.lr
+    return lr
+
 def main(args):
 
 
@@ -53,8 +58,8 @@ def main(args):
             decay_rate=0.1)
 
         optimizer = tf.keras.optimizers.SGD(lr_schedule)
-
-        model.compile(optimizer,loss = NLL(),metrics=[NLL_metric()])
+        lr_metric = get_lr_metric(optimizer)
+        model.compile(optimizer,loss = NLL(),metrics=[NLL_metric(),lr_metric])
         history = model.fit(traing_data,epochs=args.epochs,callbacks=callbacks)
         model.save(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.h5")
         with open(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.history", 'wb') as file_pi:
