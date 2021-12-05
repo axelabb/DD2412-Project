@@ -25,7 +25,7 @@ def main(args):
         n_classes = 10
 
 
-    input_shape = tuple([3]+ list(x_train[0].shape))
+    input_shape = tuple([args.ensemble_size]+ list(x_train[0].shape))
     
     steps_per_epoch = x_train.shape[0] //args.batch_size
 
