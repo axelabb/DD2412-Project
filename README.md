@@ -11,4 +11,5 @@ noise 40%, symmetric: sigma 1.0, asymmetric: sigma 0.5, also test without noise 
 19 totalt
 
 
-Standard M = 3, vad är batch size? ecpoher? väljs torsdag 2 december
+Standard M = 3, batch size 512 ecpoher 120 
+
