@@ -18,11 +18,31 @@ def load_cifar10():
 def accuracy(pred,labels):
     probs = softmax(pred)
     probs = np.mean(probs,axis=1)
-    #print(probs.shape)
-    #print(labels.shape)
     accuracy = tf.keras.metrics.categorical_accuracy(labels,probs) #Funkar detta?
     accuracy=np.mean(accuracy)
     return accuracy
+
+def nll(pred,labels,ensemble_size):
+    tiled_labels = np.tile(np.expand_dims(labels,1),[10,ensemble_size]) #10 or 1? 
+
+    return tf.keras.losses.categorical_crossentropy(tiled_labels,pred,from_logits=True)
+
+def member_accuracy(pred,labels,ensemble_size):
+    probs = softmax(pred)
+    accuracy = []
+    for i in range(ensemble_size):
+        member_probs = probs[:,i]
+        accuracy.append(tf.keras.metrics.categorical_accuracy(labels,member_probs))
+        
+    return accuracy
+
+def member_nll(pred,labels,ensemble_size):
+    probs = softmax(pred)
+    nll = []
+    for i in range(ensemble_size):
+        member_probs = probs[:,i]
+        nll.append(tf.keras.losses.categorical_crossentropy(labels,member_probs))
+    return nll
 
 def main(args):
     
@@ -41,7 +61,10 @@ def main(args):
 
     y_pred = model.predict(test_data)
     #print(y_pred.shape)
-    print(accuracy(y_pred,y_test))
+    print(f"Accuracy: {accuracy(y_pred,y_test)}")
+    print(f"NLL: {nll(y_pred,y_test,args.ensemble_size)}")
+    print(f"Member Accuracy: {member_accuracy(y_pred,y_test,args.ensembel_size)}")
+    print(f"Member NLL: {member_nll(y_pred,y_test,args.ensembel_size)} ")
 
 if __name__=="__main__":
 
