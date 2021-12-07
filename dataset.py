@@ -67,12 +67,12 @@ class DataGenerator(tf.keras.utils.Sequence):
 
         for i in range(len(y)):
             if noise=='sym':
-                p1 = ratio/(self.n_class-1)*np.ones(self.n_class)
+                p1 = ratio/(self.n_classes-1)*np.ones(self.n_classes)
                 p1[y[i]] = 1-ratio
-                y[i] = np.random.choice(self.n_class,p=p1)
+                y[i] = np.random.choice(self.n_classes,p=p1)
 
             elif noise=='asym':
-                y[i] = np.random.choice([y[i],(y[i]+1)%self.n_class],p=[1-ratio,ratio])   
+                y[i] = np.random.choice([y[i],(y[i]+1)%self.n_classes],p=[1-ratio,ratio])   
 
         self.y = np.eye(self.n_classes)[y]
 
