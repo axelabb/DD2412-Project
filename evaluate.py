@@ -33,7 +33,7 @@ def member_accuracy(pred,labels,ensemble_size):
     accuracy = []
     for i in range(ensemble_size):
         member_probs = probs[:,i]
-        accuracy.append(tf.keras.metrics.categorical_accuracy(labels,member_probs))
+        accuracy.append(np.mean(tf.keras.metrics.categorical_accuracy(labels,member_probs)))
         
     return accuracy
 
