@@ -62,8 +62,8 @@ def main(args):
             sigma = 0
             if args.sigma:
                 sigma = args.sigma
-            model.save(f"model_noise{args.noise}_sigma{args.sigma}.h5")
-            with open(f"model_noise{args.noise}_sigma{args.sigma}.history", 'wb') as file_pi:
+            model.save(f"model_{args.noise}_sigma{sigma}.h5")
+            with open(f"model_{args.noise}_sigma{sigma}.history", 'wb') as file_pi:
                 pickle.dump(history.history, file_pi)
         else:
             model.save(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.h5")
