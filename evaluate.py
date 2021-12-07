@@ -64,8 +64,8 @@ def main(args):
     #print(y_pred.shape)
     print(f"Accuracy: {accuracy(y_pred,y_test)}")
     print(f"NLL: {nll(y_pred,y_test,args.ensemble_size)}")
-    print(f"Member Accuracy: {member_accuracy(y_pred,y_test,args.ensembel_size)}")
-    print(f"Member NLL: {member_nll(y_pred,y_test,args.ensembel_size)} ")
+    print(f"Member Accuracy: {member_accuracy(y_pred,y_test,args.ensemble_size)}")
+    print(f"Member NLL: {member_nll(y_pred,y_test,args.ensemble_size)} ")
 
 if __name__=="__main__":
 
