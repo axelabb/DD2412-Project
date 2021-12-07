@@ -42,7 +42,7 @@ def member_nll(pred,labels,ensemble_size):
     nll = []
     for i in range(ensemble_size):
         member_probs = probs[:,i]
-        nll.append(tf.keras.losses.categorical_crossentropy(labels,member_probs))
+        nll.append(np.mean(tf.keras.losses.categorical_crossentropy(labels,member_probs)))
     return nll
 
 def main(args):
@@ -65,7 +65,7 @@ def main(args):
     print(f"Accuracy: {accuracy(y_pred,y_test)}")
     print(f"NLL: {nll(y_pred,y_test,args.ensemble_size)}")
     print(f"Member Accuracy: {member_accuracy(y_pred,y_test,args.ensemble_size)}")
-    #print(f"Member NLL: {member_nll(y_pred,y_test,args.ensemble_size)} ")
+    print(f"Member NLL: {member_nll(y_pred,y_test,args.ensemble_size)} ")
 
 if __name__=="__main__":
 
