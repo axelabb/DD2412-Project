@@ -26,7 +26,7 @@ def nll(pred,labels,ensemble_size):
     tiled_labels = np.tile(np.expand_dims(labels,1),[ensemble_size,1]) #10 or 1? 
     nll = -tf.keras.losses.categorical_crossentropy(tiled_labels,pred,from_logits=True)
 
-    return np.mean(-np.log(np.sum(np.exp(nll),axis=1))+np.log(ensemble_size)) 
+    return np.mean(-np.log(np.sum(np.exp(nll),axis=1))) 
 
 def member_accuracy(pred,labels,ensemble_size):
     probs = softmax(pred)
