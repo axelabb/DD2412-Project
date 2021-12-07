@@ -23,7 +23,7 @@ def accuracy(pred,labels):
     return accuracy
 
 def nll(pred,labels,ensemble_size):
-    tiled_labels = np.tile(np.expand_dims(labels,1),[10,ensemble_size]) #10 or 1? 
+    tiled_labels = np.tile(np.expand_dims(labels,1),[1,ensemble_size]) #10 or 1? 
 
     return tf.keras.losses.categorical_crossentropy(tiled_labels,pred,from_logits=True)
 
