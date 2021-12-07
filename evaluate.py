@@ -2,7 +2,7 @@ import tensorflow as tf
 from model import wide_resnet
 from dataset import DataGenerator
 import argparse
-from scipy.special import softmax
+from scipy.special import softmax,logsumexp
 import numpy as np
 
 
@@ -26,14 +26,14 @@ def nll(pred,labels,ensemble_size):
     tiled_labels = np.tile(np.expand_dims(labels,1),[ensemble_size,1]) #10 or 1? 
     nll = -tf.keras.losses.categorical_crossentropy(tiled_labels,pred,from_logits=True)
 
-    return np.mean(-np.log(np.sum(np.exp(nll),axis=1))) 
+    return np.mean(-logsumexp(nll,axis=1)+np.log(ensemble_size)) 
 
 def member_accuracy(pred,labels,ensemble_size):
     probs = softmax(pred)
     accuracy = []
     for i in range(ensemble_size):
         member_probs = probs[:,i]
-        accuracy.append(np.mean(tf.keras.metrics.categorical_accuracy(labels,member_probs)))
+        accuracy.append(-np.mean(tf.keras.metrics.categorical_accuracy(labels,member_probs)))
         
     return accuracy
 
