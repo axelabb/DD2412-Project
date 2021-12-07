@@ -29,9 +29,11 @@ def main(args):
     
     steps_per_epoch = x_train.shape[0] //args.batch_size
 
-    traing_data=DataGenerator(x_train,y_train,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,True
-    , n_classes)
+    traing_data=DataGenerator(x_train,y_train,args.batch_size,args.batch_rep,args.inp_rep_prob,args.ensemble_size,True, n_classes)
     
+    if args.noise:
+        traing_data.add_label_noise(args.noise,0.4)
+
     if args.sigma:
         traing_data.noise_againse_noise(args.sigma)
 
@@ -54,11 +56,19 @@ def main(args):
             decay_rate=0.9)
 
         optimizer = tf.keras.optimizers.SGD(lr_schedule,momentum=0.9,nesterov=True)
-        model.compile(optimizer,loss = NLL(),metrics=[NLL_metric()])
+        model.compile(optimizer,loss = NLL())
         history = model.fit(traing_data,epochs=args.epochs,callbacks=callbacks)
-        model.save(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.h5")
-        with open(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.history", 'wb') as file_pi:
-            pickle.dump(history.history, file_pi)
+        if args.noise:
+            sigma = 0
+            if args.sigma:
+                sigma = args.sigma
+            model.save(f"model_noise{args.noise}_sigma{args.sigma}.h5")
+            with open(f"model_noise{args.noise}_sigma{args.sigma}.history", 'wb') as file_pi:
+                pickle.dump(history.history, file_pi)
+        else:
+            model.save(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.h5")
+            with open(f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.history", 'wb') as file_pi:
+                pickle.dump(history.history, file_pi)
         #joblib.dump(history, f"model_M{args.ensemble_size}__br{args.batch_rep}_ir{args.inp_rep_prob}.history")
 
 
@@ -80,6 +90,7 @@ if __name__=="__main__":
     parser.add_argument('--dataset',type=str,default="cifar-10", required=False)
 
     parser.add_argument('--sigma', type = float, default=None, required=None)
+    parser.add_argument('--noise',type=str,default=None)
 
     args=parser.parse_args()
 
