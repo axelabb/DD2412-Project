@@ -34,11 +34,11 @@ class DataGenerator(tf.keras.utils.Sequence):
         input_shuffle=int(batch_rep.shape[0] * (1. - self.inp_rep_prob))
         #Kan detta göras bättre?
         shuffle_idxs = [np.concatenate([np.random.permutation( batch_rep[:input_shuffle]), batch_rep[input_shuffle:]]) for _ in range(self.ensemble_size)]
-
-        imgs = np.stack([np.take(imgs, indxs, axis=0) for indxs in shuffle_idxs], axis=1)
-        labels = np.stack([np.take(labels, indxs, axis=0) for indxs in shuffle_idxs], axis=1)
         if self.noise:
             labels += self.sigma*np.random.randn(*labels.shape)
+        imgs = np.stack([np.take(imgs, indxs, axis=0) for indxs in shuffle_idxs], axis=1)
+        labels = np.stack([np.take(labels, indxs, axis=0) for indxs in shuffle_idxs], axis=1)
+        
         return imgs, labels
 
     def __get_test_data(self,imgs,labels):
